@@ -128,8 +128,8 @@
 <body class="h-screen w-full relative flex items-center justify-center transition-colors duration-1000" id="main-body">
 
     <!-- Reproductor de YouTube Oculto para la música de Manzanita -->
-    <!-- Se inicializará usando la API de JS -->
-    <div id="player" class="hidden"></div>
+    <!-- En lugar de "hidden", lo mandamos fuera de la pantalla con un tamaño mínimo para que YouTube no lo bloquee -->
+    <div id="player" class="absolute top-[-9999px] left-[-9999px] w-[10px] h-[10px] opacity-0 pointer-events-none"></div>
 
     <!-- ================= FASE 1: TEXTO INICIAL ================= -->
     <div id="phase1" class="flex flex-col items-center justify-center w-full h-full p-6 text-center z-10 transition-opacity duration-1000 ease-in-out">
@@ -141,7 +141,7 @@
                 ================================================================
             -->
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-dancing text-rose-600 mb-8 leading-tight" contenteditable="true" spellcheck="false" title="Haz clic para editar si lo deseas">
-                Hola morcito, como me has dicho que te hacia ilusión un ramito de violetas por la canción del manzanita y me he visto con el tiempo justo para conseguirlas, he desidido regalarte esta pagina web, para que ese ramito de violetas sea eterno, como nuestro amor jiji, te amo mucho princesa, disfrutalo.
+                Tengo una sorpresa muy especial<br>preparada solo para ti... ❤️
             </h1>
             
             <button onclick="startPhase2()" class="mt-4 bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white text-xl font-semibold py-4 px-10 rounded-full shadow-lg transform transition hover:scale-110 btn-pulse">
@@ -328,15 +328,15 @@
         // Esta función es llamada automáticamente por la API de YouTube una vez que carga
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('player', {
-                height: '0',
-                width: '0',
+                height: '10', // Tamaño mayor a 0 para evitar bloqueos
+                width: '10',
                 // ID de YouTube para "Un Ramito de Violetas - Manzanita". 
-                // He usado un audio oficial/popular.
                 videoId: 'k1Zp2lH-FpE', 
                 playerVars: {
                     'autoplay': 0, // No reproducimos aún para evitar bloqueos del navegador
                     'controls': 0,
-                    'playsinline': 1
+                    'playsinline': 1,
+                    'origin': window.location.origin // Ayuda a dar permisos de reproducción cruzada
                 }
             });
         }
@@ -383,7 +383,11 @@
         function startPhase3() {
             // Iniciamos la música al hacer clic (el navegador lo permite porque es una interacción del usuario)
             if (player && typeof player.playVideo === 'function') {
-                player.playVideo();
+                try {
+                    player.playVideo();
+                } catch(e) {
+                    console.log("Esperando buffer de audio...");
+                }
             }
 
             // Ocultamos el gatito y la fase 2
