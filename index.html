@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Ti ❤️</title>
+    <!-- Tailwind CSS para el diseño responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts para una tipografía romántica -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; /* Evita barras de desplazamiento */
+            background: linear-gradient(135deg, #ffe4e6 0%, #fbcfe8 100%);
+        }
+
+        .font-dancing {
+            font-family: 'Dancing Script', cursive;
+        }
+
+        /* --- Animaciones del Gatito mejoradas (Efecto 3D de acercamiento) --- */
+        @keyframes runTowards {
+            0% { 
+                /* Empieza diminuto y muy abajo en el horizonte */
+                transform: scale(0.01) translateY(100vh); 
+                opacity: 0; 
+            }
+            5% {
+                opacity: 1;
+            }
+            80% {
+                /* Se acerca un poco más de su tamaño final para dar un efecto de "frenada" */
+                transform: scale(1.3) translateY(-2vh); 
+            }
+            100% { 
+                /* Se asienta en su tamaño final justo delante de la pantalla */
+                transform: scale(1.2) translateY(0); 
+                opacity: 1; 
+            }
+        }
+
+        /* Saltos simulando el trote al correr de izquierda a derecha */
+        @keyframes runBounce {
+            0% { transform: translateY(0px) rotate(-5deg); }
+            25% { transform: translateY(-30px) rotate(0deg); }
+            50% { transform: translateY(0px) rotate(5deg); }
+            75% { transform: translateY(-30px) rotate(0deg); }
+            100% { transform: translateY(0px) rotate(-5deg); }
+        }
+
+        .cat-running {
+            /* El acercamiento principal usa la curva cubic-bezier para simular perspectiva/frenada */
+            animation: runTowards 3.5s cubic-bezier(0.2, 0.8, 0.2, 1.1) forwards;
+            transform-origin: bottom center;
+        }
+
+        .cat-running #cat-inner {
+            /* Los saltos constantes se aplican independientemente al elemento interior */
+            animation: runBounce 0.4s infinite linear;
+            transform-origin: bottom center;
+        }
+
+        .cat-stopped {
+            transform: scale(1.2) translateY(0);
+            opacity: 1;
+        }
+
+        .cat-stopped #cat-inner {
+            /* Respiración suave cuando ya está quieto */
+            animation: breathe 3s infinite alternate ease-in-out;
+        }
+
+        @keyframes breathe {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-8px) scale(1.03); }
+        }
+
+        /* --- Animaciones del Ramo --- */
+        @keyframes bloom {
+            0% { transform: scale(0) rotate(-15deg); opacity: 0; filter: blur(10px); }
+            50% { opacity: 1; filter: blur(0px); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; filter: drop-shadow(0 20px 13px rgba(0,0,0,0.15)); }
+        }
+
+        .flower-bloom {
+            animation: bloom 2.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform-origin: bottom center;
+        }
+
+        /* --- Animación de Texto Flotante "TE AMO" --- */
+        .floating-text {
+            position: absolute;
+            font-family: 'Dancing Script', cursive;
+            font-weight: 700;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 50;
+            animation: floatUp linear infinite;
+            text-shadow: 2px 2px 8px rgba(255, 255, 255, 0.8);
+        }
+
+        @keyframes floatUp {
+            0% { 
+                transform: translateY(110vh) rotate(-15deg) scale(0.8); 
+                opacity: 0; 
+            }
+            10% { opacity: 1; }
+            80% { opacity: 1; }
+            100% { 
+                transform: translateY(-20vh) rotate(20deg) scale(1.5); 
+                opacity: 0; 
+            }
+        }
+
+        /* Efecto de pulso en los botones */
+        .btn-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(236, 72, 153, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(236, 72, 153, 0); }
+        }
+    </style>
+</head>
+<body class="h-screen w-full relative flex items-center justify-center transition-colors duration-1000" id="main-body">
+
+    <!-- Reproductor de YouTube Oculto para la música de Manzanita -->
+    <!-- Se inicializará usando la API de JS -->
+    <div id="player" class="hidden"></div>
+
+    <!-- ================= FASE 1: TEXTO INICIAL ================= -->
+    <div id="phase1" class="flex flex-col items-center justify-center w-full h-full p-6 text-center z-10 transition-opacity duration-1000 ease-in-out">
+        <div class="max-w-2xl bg-white/40 backdrop-blur-md p-8 md:p-12 rounded-3xl shadow-xl border border-white/50">
+            <!-- 
+                ================================================================
+                ¡EDITA TU TEXTO AQUÍ! 
+                Puedes cambiar el texto que hay entre las etiquetas <h1>
+                ================================================================
+            -->
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-dancing text-rose-600 mb-8 leading-tight" contenteditable="true" spellcheck="false" title="Haz clic para editar si lo deseas">
+                Tengo una sorpresa muy especial<br>preparada solo para ti... ❤️
+            </h1>
+            
+            <button onclick="startPhase2()" class="mt-4 bg-gradient-to-r from-rose-400 to-pink-500 hover:from-rose-500 hover:to-pink-600 text-white text-xl font-semibold py-4 px-10 rounded-full shadow-lg transform transition hover:scale-110 btn-pulse">
+                Continuar
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= FASE 2: GATITO CORRIENDO ================= -->
+    <div id="phase2" class="hidden absolute inset-0 flex flex-col items-center justify-center z-20 overflow-visible">
+        
+        <!-- Contenedor del gato para animar la escala/acercamiento -->
+        <div id="cat-container" class="opacity-0 drop-shadow-2xl">
+            <!-- Contenedor interno para animar los saltitos sin afectar la escala -->
+            <div id="cat-inner">
+                <!-- SVG Gatito sosteniendo un regalo -->
+                <svg width="300" height="350" viewBox="0 0 200 250" xmlns="http://www.w3.org/2000/svg" class="w-64 h-auto md:w-80 lg:w-96">
+                    <!-- Definición para recortar las manchas de la cabeza al borde exacto -->
+                    <defs>
+                        <clipPath id="head-clip">
+                            <ellipse cx="100" cy="90" rx="45" ry="40"/>
+                        </clipPath>
+                    </defs>
+
+                    <!-- Cola (base naranja, punta oscura) -->
+                    <path d="M 60,180 Q 20,220 30,150" fill="none" stroke="#ea580c" stroke-width="15" stroke-linecap="round"/>
+                    <path d="M 42,168 Q 20,220 30,150" fill="none" stroke="#1f2937" stroke-width="15" stroke-linecap="round"/>
+
+                    <!-- Patas traseras (Blancas con manchitas) -->
+                    <ellipse cx="70" cy="210" rx="15" ry="10" fill="#ffffff"/>
+                    <ellipse cx="130" cy="210" rx="15" ry="10" fill="#ffffff"/>
+                    <ellipse cx="70" cy="210" rx="8" ry="10" fill="#1f2937"/>
+                    <ellipse cx="130" cy="210" rx="8" ry="10" fill="#ea580c"/>
+
+                    <!-- Cuerpo (Blanco con manchas) -->
+                    <ellipse cx="100" cy="160" rx="45" ry="55" fill="#ffffff"/>
+                    <path d="M 60,140 Q 80,160 58,190 Q 50,160 60,140" fill="#1f2937"/>
+                    <path d="M 135,140 Q 115,170 138,200 Q 145,170 135,140" fill="#ea580c"/>
+                    
+                    <!-- Regalo -->
+                    <g id="gift">
+                        <rect x="70" y="140" width="60" height="50" fill="#ef4444" rx="4"/>
+                        <!-- Cinta vertical -->
+                        <rect x="95" y="140" width="10" height="50" fill="#fcd34d"/>
+                        <!-- Cinta horizontal -->
+                        <rect x="70" y="160" width="60" height="10" fill="#fcd34d"/>
+                        <!-- Lazo -->
+                        <path d="M 100,140 Q 80,110 90,140 Z" fill="#fcd34d"/>
+                        <path d="M 100,140 Q 120,110 110,140 Z" fill="#fcd34d"/>
+                        <!-- Tapa -->
+                        <rect x="65" y="130" width="70" height="15" fill="#dc2626" rx="2"/>
+                        <rect x="95" y="130" width="10" height="15" fill="#fbbf24"/>
+                    </g>
+
+                    <!-- Patas delanteras abrazando el regalo (Una oscura, una naranja) -->
+                    <path d="M 65,130 Q 50,150 70,165" fill="none" stroke="#1f2937" stroke-width="12" stroke-linecap="round"/>
+                    <path d="M 135,130 Q 150,150 130,165" fill="none" stroke="#ea580c" stroke-width="12" stroke-linecap="round"/>
+
+                    <!-- Orejas (Una negra, una naranja) -->
+                    <polygon points="55,80 40,30 80,60" fill="#1f2937"/>
+                    <polygon points="55,75 45,40 75,60" fill="#fca5a5"/> <!-- interior oreja -->
+                    <polygon points="145,80 160,30 120,60" fill="#ea580c"/>
+                    <polygon points="145,75 155,40 125,60" fill="#fca5a5"/> <!-- interior oreja -->
+                    
+                    <!-- Cabeza (Base blanca) -->
+                    <ellipse cx="100" cy="90" rx="45" ry="40" fill="#ffffff"/>
+                    
+                    <!-- Manchas en la cabeza (Usa el clipPath para no salirse del borde de la cara) -->
+                    <g clip-path="url(#head-clip)">
+                        <ellipse cx="65" cy="70" rx="25" ry="30" fill="#1f2937"/>
+                        <ellipse cx="135" cy="70" rx="25" ry="30" fill="#ea580c"/>
+                    </g>
+
+                    <!-- Cara -->
+                    <!-- Ojos grandes con fondo blanco para que resalten sobre las manchas -->
+                    <ellipse cx="80" cy="85" rx="9" ry="11" fill="#ffffff"/>
+                    <circle cx="80" cy="85" r="5" fill="#1f2937"/>
+                    <circle cx="82" cy="83" r="2" fill="#ffffff"/> <!-- brillo -->
+                    
+                    <ellipse cx="120" cy="85" rx="9" ry="11" fill="#ffffff"/>
+                    <circle cx="120" cy="85" r="5" fill="#1f2937"/>
+                    <circle cx="122" cy="83" r="2" fill="#ffffff"/> <!-- brillo -->
+                    
+                    <!-- Mejillas -->
+                    <ellipse cx="65" cy="95" rx="8" ry="4" fill="#fca5a5" opacity="0.8"/>
+                    <ellipse cx="135" cy="95" rx="8" ry="4" fill="#fca5a5" opacity="0.8"/>
+                    
+                    <!-- Nariz y boca -->
+                    <polygon points="95,95 105,95 100,102" fill="#ef4444"/>
+                    <path d="M 90,105 Q 100,115 100,102 Q 100,115 110,105" fill="none" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+                    
+                    <!-- Bigotes (Los izquierdos son blancos para contrastar con la mancha oscura) -->
+                    <line x1="60" y1="90" x2="30" y2="85" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="60" y1="95" x2="30" y2="95" stroke="#ffffff" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="140" y1="90" x2="170" y2="85" stroke="#4b5563" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="140" y1="95" x2="170" y2="95" stroke="#4b5563" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Botón para abrir el regalo (aparece después) -->
+        <button id="btn-open-gift" onclick="startPhase3()" class="hidden mt-8 bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white text-2xl font-bold py-4 px-12 rounded-full shadow-2xl transform transition hover:scale-110 border-4 border-white z-50">
+            Abrir Regalo 🎁
+        </button>
+    </div>
+
+    <!-- ================= FASE 3: RAMO, MÚSICA Y TEXTO FLOTANTE ================= -->
+    <div id="phase3" class="hidden absolute inset-0 flex items-center justify-center z-30">
+        <!-- Contenedor de palabras flotantes -->
+        <div id="floating-container" class="absolute inset-0 pointer-events-none z-10 overflow-hidden"></div>
+        
+        <!-- SVG del Ramo de Violetas -->
+        <svg id="bouquet" viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" class="w-[300px] md:w-[450px] lg:w-[500px] h-auto scale-0 opacity-0 z-20">
+            
+            <!-- Tallos (Stems) -->
+            <path d="M150,400 Q140,250 100,150" fill="none" stroke="#16a34a" stroke-width="6" stroke-linecap="round"/>
+            <path d="M150,400 Q150,250 150,130" fill="none" stroke="#15803d" stroke-width="8" stroke-linecap="round"/>
+            <path d="M150,400 Q160,250 200,150" fill="none" stroke="#22c55e" stroke-width="6" stroke-linecap="round"/>
+            <path d="M150,400 Q120,300 80,200" fill="none" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+            <path d="M150,400 Q180,300 220,200" fill="none" stroke="#15803d" stroke-width="5" stroke-linecap="round"/>
+            
+            <!-- Papel envoltorio -->
+            <path d="M100,280 L200,280 L170,400 L130,400 Z" fill="#fdf2f8"/>
+            <path d="M80,220 Q150,300 220,220 L150,320 Z" fill="#fbcfe8"/>
+            <!-- Lazo del ramo -->
+            <path d="M120,320 Q150,340 180,320 Q160,300 150,320 Q140,300 120,320" fill="#ec4899"/>
+            <rect x="145" y="320" width="10" height="40" fill="#ec4899" rx="2" transform="rotate(15 150 320)"/>
+            <rect x="145" y="320" width="10" height="40" fill="#ec4899" rx="2" transform="rotate(-15 150 320)"/>
+
+            <!-- Grupo de Flores (Violetas) -->
+            <!-- Función SVG para reutilizar un pétalo o flor -->
+            <defs>
+                <g id="violet-flower">
+                    <circle cx="-12" cy="-12" r="16" fill="currentColor"/>
+                    <circle cx="12" cy="-12" r="16" fill="currentColor"/>
+                    <circle cx="-12" cy="12" r="16" fill="currentColor"/>
+                    <circle cx="12" cy="12" r="16" fill="currentColor"/>
+                    <circle cx="0" cy="0" r="10" fill="currentColor"/>
+                    <!-- Centro de la flor -->
+                    <circle cx="0" cy="0" r="6" fill="#fcd34d"/>
+                    <circle cx="0" cy="0" r="3" fill="#f59e0b"/>
+                </g>
+                <g id="leaf">
+                    <path d="M0,0 Q20,-10 30,-30 Q10,-20 0,0" fill="#4ade80"/>
+                </g>
+            </defs>
+
+            <!-- Hojas esparcidas -->
+            <use href="#leaf" x="100" y="160" transform="rotate(-45 100 160) scale(1.5)"/>
+            <use href="#leaf" x="190" y="150" transform="rotate(45 190 150) scale(1.5)"/>
+            <use href="#leaf" x="150" y="130" transform="rotate(0 150 130) scale(2)"/>
+            <use href="#leaf" x="70" y="210" transform="rotate(-70 70 210) scale(1.2)"/>
+            <use href="#leaf" x="230" y="200" transform="rotate(70 230 200) scale(1.2)"/>
+
+            <!-- Violetas de muchos colores románticos -->
+            <!-- Morado oscuro -->
+            <use href="#violet-flower" x="150" y="120" color="#7e22ce" transform="scale(1.2)"/>
+            <!-- Violeta -->
+            <use href="#violet-flower" x="100" y="160" color="#8b5cf6" transform="scale(1.1)"/>
+            <use href="#violet-flower" x="200" y="150" color="#8b5cf6" transform="scale(1)"/>
+            <!-- Fucsia / Rosa fuerte -->
+            <use href="#violet-flower" x="130" y="170" color="#d946ef" transform="scale(1.3)"/>
+            <use href="#violet-flower" x="170" y="190" color="#c026d3" transform="scale(1.2)"/>
+            <!-- Rosa claro -->
+            <use href="#violet-flower" x="75" y="200" color="#f472b6" transform="scale(0.9)"/>
+            <use href="#violet-flower" x="220" y="190" color="#f472b6" transform="scale(1)"/>
+            <!-- Púrpura medio -->
+            <use href="#violet-flower" x="115" y="220" color="#a855f7" transform="scale(1.1)"/>
+            <use href="#violet-flower" x="185" y="230" color="#9333ea" transform="scale(0.95)"/>
+            <!-- Toques extra -->
+            <use href="#violet-flower" x="150" y="240" color="#d946ef" transform="scale(1.25)"/>
+            <use href="#violet-flower" x="150" y="70" color="#8b5cf6" transform="scale(0.8)"/>
+            <use href="#violet-flower" x="110" y="110" color="#c026d3" transform="scale(0.9)"/>
+            <use href="#violet-flower" x="190" y="100" color="#d946ef" transform="scale(0.85)"/>
+        </svg>
+    </div>
+
+    <!-- Scripts de Lógica y YouTube API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script>
+        // === Configuración del Reproductor de YouTube ===
+        let player;
+        
+        // Esta función es llamada automáticamente por la API de YouTube una vez que carga
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '0',
+                width: '0',
+                // ID de YouTube para "Un Ramito de Violetas - Manzanita". 
+                // He usado un audio oficial/popular.
+                videoId: 'k1Zp2lH-FpE', 
+                playerVars: {
+                    'autoplay': 0, // No reproducimos aún para evitar bloqueos del navegador
+                    'controls': 0,
+                    'playsinline': 1
+                }
+            });
+        }
+
+        // === Control de Fases ===
+
+        function startPhase2() {
+            // Desvanece la pantalla 1
+            const phase1 = document.getElementById('phase1');
+            phase1.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                phase1.classList.add('hidden');
+                
+                // Muestra la pantalla 2 (Gatito)
+                const phase2 = document.getElementById('phase2');
+                phase2.classList.remove('hidden');
+                
+                // Inicia la animación de correr del gatito
+                const cat = document.getElementById('cat-container');
+                cat.classList.add('cat-running');
+
+                // Después de 3.5 segundos (tiempo de la animación), el gatito se detiene
+                setTimeout(() => {
+                    // Cambiamos a la animación de "respirar" (parado frente al usuario)
+                    cat.classList.remove('cat-running');
+                    cat.classList.add('cat-stopped');
+                    
+                    // Mostramos el botón de abrir regalo
+                    const btn = document.getElementById('btn-open-gift');
+                    btn.classList.remove('hidden');
+                    // Pequeño fade-in para el botón
+                    btn.style.opacity = "0";
+                    setTimeout(() => {
+                        btn.style.transition = "opacity 1s ease";
+                        btn.style.opacity = "1";
+                    }, 50);
+                    
+                }, 3500); // 3.5s coincide con la duración de @keyframes runTowards
+                
+            }, 1000);
+        }
+
+        function startPhase3() {
+            // Iniciamos la música al hacer clic (el navegador lo permite porque es una interacción del usuario)
+            if (player && typeof player.playVideo === 'function') {
+                player.playVideo();
+            }
+
+            // Ocultamos el gatito y la fase 2
+            const phase2 = document.getElementById('phase2');
+            phase2.classList.add('opacity-0');
+            phase2.style.transition = "opacity 0.8s ease";
+
+            // Cambiamos el fondo de la página a un tono más profundo y romántico
+            document.getElementById('main-body').style.background = "linear-gradient(135deg, #fbcfe8 0%, #a21caf 100%)";
+
+            setTimeout(() => {
+                phase2.classList.add('hidden');
+                
+                // Mostramos fase 3
+                const phase3 = document.getElementById('phase3');
+                phase3.classList.remove('hidden');
+
+                // Animamos el ramo para que florezca
+                const bouquet = document.getElementById('bouquet');
+                bouquet.classList.add('flower-bloom');
+
+                // Empezamos a generar texto "TE AMO" flotante
+                startFloatingText();
+            }, 800);
+        }
+
+        // === Generador de Partículas de Texto "TE AMO" ===
+        function startFloatingText() {
+            const container = document.getElementById('floating-container');
+            
+            // Array de colores románticos de Tailwind
+            const textColors = [
+                'text-white', 
+                'text-pink-200', 
+                'text-pink-300', 
+                'text-purple-200', 
+                'text-rose-200'
+            ];
+
+            // Crea un nuevo texto cada 400 milisegundos
+            setInterval(() => {
+                const el = document.createElement('div');
+                el.innerText = 'TE AMO';
+                
+                // Color aleatorio
+                const randomColor = textColors[Math.floor(Math.random() * textColors.length)];
+                el.className = `floating-text ${randomColor}`;
+                
+                // Posición horizontal aleatoria (0% a 90% del ancho de la pantalla)
+                el.style.left = (Math.random() * 90) + 'vw';
+                
+                // Tamaño de fuente aleatorio entre 24px y 60px
+                const fontSize = Math.floor(Math.random() * 36) + 24;
+                el.style.fontSize = fontSize + 'px';
+                
+                // Duración de la animación aleatoria entre 6s y 12s para que suban a distintos ritmos
+                const duration = Math.random() * 6 + 6;
+                el.style.animationDuration = duration + 's';
+                
+                container.appendChild(el);
+
+                // Elimina el elemento del DOM una vez que termina su animación para no saturar la memoria
+                setTimeout(() => {
+                    el.remove();
+                }, duration * 1000);
+
+            }, 400);
+        }
+    </script>
+</body>
+</html>
